@@ -1,4 +1,4 @@
-name: Build and Test RAG System
+name: Build and Push RAG API
 
 on:
   push:
@@ -27,3 +27,12 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t rag-api .
+
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+      - name: Tag Docker image
+        run: docker tag rag-api ${{ secrets.DOCKER_USERNAME }}/rag-api:latest
+
+      - name: Push Docker image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/rag-api:latest
